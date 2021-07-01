@@ -1,0 +1,264 @@
+mysql> create table Sales_Rep( Rep_ID Integer primary key, Name varchar(50), City varchar(20), commision double);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe Sales_Rep;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| Rep_ID    | int(11)     | NO   | PRI | NULL    |       |
+| Name      | varchar(50) | YES  |     | NULL    |       |
+| City      | varchar(20) | YES  |     | NULL    |       |
+| commision | double      | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> create table Consumer(Consumer_ID Integer, Consumer_Name varchar(50), City varchar(20), Grade varchar(20), Rep_ID Integer, primary key (Consumer_ID), foreign key (Rep_ID) references Sales_Rep(Rep_ID));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> describe Consumer;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| Consumer_ID   | int(11)     | NO   | PRI | 0       |       |
+| Consumer_Name | varchar(50) | YES  |     | NULL    |       |
+| City          | varchar(20) | YES  |     | NULL    |       |
+| Grade         | varchar(20) | YES  |     | NULL    |       |
+| Rep_ID        | int(11)     | YES  | MUL | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+5 rows in set (0.02 sec)
+
+mysql> create table Invoice(Invoice_ID Integer, Invoice_amount double, Invoice_Date date, Consumer_ID Integr, Rep_ID Integer, primary key (Invoice_ID), foreign key (Rep_ID) references Sales_Rep(REP_ID), foreign key (Consumer_ID) references Consumer(Consumer_ID));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Integr, Rep_ID Integer, primary key (Invoice_ID), foreign key (Rep_ID) reference' at line 1
+mysql> create table Invoice(Invoice_ID Integer, Invoice_amount double, Invoice_Date date, Consumer_ID Integer, Rep_ID Integer, primary key (Invoice_ID), foreign key (Rep_ID) references Sales_Rep(REP_ID), foreign key (Consumer_ID) references Consumer(Consumer_ID));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> describe Invoice;
++----------------+---------+------+-----+---------+-------+
+| Field          | Type    | Null | Key | Default | Extra |
++----------------+---------+------+-----+---------+-------+
+| Invoice_ID     | int(11) | NO   | PRI | 0       |       |
+| Invoice_amount | double  | YES  |     | NULL    |       |
+| Invoice_Date   | date    | YES  |     | NULL    |       |
+| Consumer_ID    | int(11) | YES  | MUL | NULL    |       |
+| Rep_ID         | int(11) | YES  | MUL | NULL    |       |
++----------------+---------+------+-----+---------+-------+
+5 rows in set (0.02 sec)
+
+mysql> insert into Sales_Rep values(1001,'Anthony G','New Delhi',0.25);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into Sales_Rep values(1002,'Regina R','Bangalore',0.15);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into Sales_Rep values(1003,'Santhosh','Mumbai',0.12);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into Sales_Rep values(1004,'Jaya Prasad','Chennai',0.11);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Sales_Rep values(1006,'Diptish','Kolkatta',0.12);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Sales_Rep values(1007,'Abbas','Hyderabad',0.1);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> update Sales_Rep set Rep_ID = 1005 where Rep_ID=1004;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Sales_Rep
+    -> ;
++--------+-------------+-----------+-----------+
+| Rep_ID | Name        | City      | commision |
++--------+-------------+-----------+-----------+
+|   1001 | Anthony G   | New Delhi |      0.25 |
+|   1002 | Regina R    | Bangalore |      0.15 |
+|   1003 | Santhosh    | Mumbai    |      0.12 |
+|   1005 | Jaya Prasad | Chennai   |      0.11 |
+|   1006 | Diptish     | Kolkatta  |      0.12 |
+|   1007 | Abbas       | Hyderabad |       0.1 |
++--------+-------------+-----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> insert into Consumer values(3001,'Mary','Chennai',NULL,1005);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Consumer values(3002,'Nirav Parmar','New Delhi',100,1001);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into Consumer values(3003,'Ram Sangeeth','Hyderabad',200,1007);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Consumer values(3004,'Somsubhra','Kolkatta',300,1006);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into Consumer values(3005,'James','Bangalore',200,1002);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into Consumer values(3007,'Harish Manana','New Delhi',200,1001);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into Consumer values(3008,'Rajesh Kumar','Bangalore',300,1002);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Consumer values(3009,'Sharon George','Mumbai',100,1003);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from Consumer;
++-------------+---------------+-----------+-------+--------+
+| Consumer_ID | Consumer_Name | City      | Grade | Rep_ID |
++-------------+---------------+-----------+-------+--------+
+|        3001 | Mary          | Chennai   | NULL  |   1005 |
+|        3002 | Nirav Parmar  | New Delhi | 100   |   1001 |
+|        3003 | Ram Sangeeth  | Hyderabad | 200   |   1007 |
+|        3004 | Somsubhra     | Kolkatta  | 300   |   1006 |
+|        3005 | James         | Bangalore | 200   |   1002 |
+|        3007 | Harish Manana | New Delhi | 200   |   1001 |
+|        3008 | Rajesh Kumar  | Bangalore | 300   |   1002 |
+|        3009 | Sharon George | Mumbai    | 100   |   1003 |
++-------------+---------------+-----------+-------+--------+
+8 rows in set (0.00 sec)
+
+mysql> insert into Invoice values(1001,1500,5,2017-10-05,3005,1002);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into Invoice values(1001,1500.5,2017-10-05,3005,1002);
+ERROR 1292 (22007): Incorrect date value: '2002' for column 'Invoice_Date' at row 1
+mysql> insert into Invoice values(1001,1500.5,'2017-10-05',3005,1002);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into Invoice values(10002,6560.2,'2017-10-05',3002,1001);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Invoice values(10003,2480.4,'2017-10-10',3009,1003);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Invoice values(10004,1100.5,'2017-08-17',3009,1003);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into Invoice values(10005,2400.6,'2017-07-27',3007,1001);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Invoice values(10007,9480.5,'2017-09-10',3005,1002);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Invoice values(10008,5760,'2017-09-10',3002,1001););
+Query OK, 1 row affected (0.02 sec)
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+mysql> insert into Invoice values(10008,5760,'2017-09-10',3002,1001);
+ERROR 1062 (23000): Duplicate entry '10008' for key 'PRIMARY'
+mysql> insert into Invoice values(10009,2700.6,'2017-09-10',3001,1005);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into Invoice values(10010,1983.43,'2017-10-10',3004,1006);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Invoice values(10011,7500.29,'2017-08-17',3003,1007);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Invoice values(10012,2500.45,'2017-06-27',3008,1002);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into Invoice values(10013,3045.6,'2017-04-25',3002,1001);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> update Invoice set Invoice_ID=10001 where Invoice_ID=1001;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Invoice;
++------------+----------------+--------------+-------------+--------+
+| Invoice_ID | Invoice_amount | Invoice_Date | Consumer_ID | Rep_ID |
++------------+----------------+--------------+-------------+--------+
+|      10001 |         1500.5 | 2017-10-05   |        3005 |   1002 |
+|      10002 |         6560.2 | 2017-10-05   |        3002 |   1001 |
+|      10003 |         2480.4 | 2017-10-10   |        3009 |   1003 |
+|      10004 |         1100.5 | 2017-08-17   |        3009 |   1003 |
+|      10005 |         2400.6 | 2017-07-27   |        3007 |   1001 |
+|      10007 |         9480.5 | 2017-09-10   |        3005 |   1002 |
+|      10008 |           5760 | 2017-09-10   |        3002 |   1001 |
+|      10009 |         2700.6 | 2017-09-10   |        3001 |   1005 |
+|      10010 |        1983.43 | 2017-10-10   |        3004 |   1006 |
+|      10011 |        7500.29 | 2017-08-17   |        3003 |   1007 |
+|      10012 |        2500.45 | 2017-06-27   |        3008 |   1002 |
+|      10013 |         3045.6 | 2017-04-25   |        3002 |   1001 |
++------------+----------------+--------------+-------------+--------+
+12 rows in set (0.00 sec)
+
+mysql> select * from Consumer where City in ('Bangalore','Kolkatta');
++-------------+---------------+-----------+-------+--------+
+| Consumer_ID | Consumer_Name | City      | Grade | Rep_ID |
++-------------+---------------+-----------+-------+--------+
+|        3004 | Somsubhra     | Kolkatta  | 300   |   1006 |
+|        3005 | James         | Bangalore | 200   |   1002 |
+|        3008 | Rajesh Kumar  | Bangalore | 300   |   1002 |
++-------------+---------------+-----------+-------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select Invoice_ID, Invoice_Date,Consumer_ID,Rep_ID,Invoice_amount from Invoice where Invoice_amount>5000;
++------------+--------------+-------------+--------+----------------+
+| Invoice_ID | Invoice_Date | Consumer_ID | Rep_ID | Invoice_amount |
++------------+--------------+-------------+--------+----------------+
+|      10002 | 2017-10-05   |        3002 |   1001 |         6560.2 |
+|      10007 | 2017-09-10   |        3005 |   1002 |         9480.5 |
+|      10008 | 2017-09-10   |        3002 |   1001 |           5760 |
+|      10011 | 2017-08-17   |        3003 |   1007 |        7500.29 |
++------------+--------------+-------------+--------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from Sales_Rep where city like '%i';
++--------+-------------+-----------+-----------+
+| Rep_ID | Name        | City      | commision |
++--------+-------------+-----------+-----------+
+|   1001 | Anthony G   | New Delhi |      0.25 |
+|   1003 | Santhosh    | Mumbai    |      0.12 |
+|   1005 | Jaya Prasad | Chennai   |      0.11 |
++--------+-------------+-----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select Name, City, commision from Sales_Rep;
++-------------+-----------+-----------+
+| Name        | City      | commision |
++-------------+-----------+-----------+
+| Anthony G   | New Delhi |      0.25 |
+| Regina R    | Bangalore |      0.15 |
+| Santhosh    | Mumbai    |      0.12 |
+| Jaya Prasad | Chennai   |      0.11 |
+| Diptish     | Kolkatta  |      0.12 |
+| Abbas       | Hyderabad |       0.1 |
++-------------+-----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> select Invoice_Date, Rep_ID, Invoice_ID, Invoice_amount from Invoice;
++--------------+--------+------------+----------------+
+| Invoice_Date | Rep_ID | Invoice_ID | Invoice_amount |
++--------------+--------+------------+----------------+
+| 2017-10-05   |   1002 |      10001 |         1500.5 |
+| 2017-10-05   |   1001 |      10002 |         6560.2 |
+| 2017-10-10   |   1003 |      10003 |         2480.4 |
+| 2017-08-17   |   1003 |      10004 |         1100.5 |
+| 2017-07-27   |   1001 |      10005 |         2400.6 |
+| 2017-09-10   |   1002 |      10007 |         9480.5 |
+| 2017-09-10   |   1001 |      10008 |           5760 |
+| 2017-09-10   |   1005 |      10009 |         2700.6 |
+| 2017-10-10   |   1006 |      10010 |        1983.43 |
+| 2017-08-17   |   1007 |      10011 |        7500.29 |
+| 2017-06-27   |   1002 |      10012 |        2500.45 |
+| 2017-04-25   |   1001 |      10013 |         3045.6 |
++--------------+--------+------------+----------------+
+12 rows in set (0.00 sec)
+
+mysql> select Consumer_ID, Consumer_Name, City, Grade from Consumer order by Consumer_Name ASC;
++-------------+---------------+-----------+-------+
+| Consumer_ID | Consumer_Name | City      | Grade |
++-------------+---------------+-----------+-------+
+|        3007 | Harish Manana | New Delhi | 200   |
+|        3005 | James         | Bangalore | 200   |
+|        3001 | Mary          | Chennai   | NULL  |
+|        3002 | Nirav Parmar  | New Delhi | 100   |
+|        3008 | Rajesh Kumar  | Bangalore | 300   |
+|        3003 | Ram Sangeeth  | Hyderabad | 200   |
+|        3009 | Sharon George | Mumbai    | 100   |
+|        3004 | Somsubhra     | Kolkatta  | 300   |
++-------------+---------------+-----------+-------+
+8 rows in set (0.00 sec)
